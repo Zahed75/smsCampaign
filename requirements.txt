@@ -1,0 +1,12 @@
+asgiref
+Django
+django-cleanup
+django-filter
+djangorestframework
+Markdown
+pillow
+psycopg2
+sqlparse
+django-cors-headers
+drf-spectacular
+requests
