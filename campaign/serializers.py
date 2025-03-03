@@ -25,3 +25,4 @@ class CustomerGiftSelectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerGiftSelection
         fields = '__all__'
+

@@ -1,6 +1,3 @@
-
-
-
 import os
 from pathlib import Path
 from datetime import timedelta
@@ -41,7 +38,6 @@ INSTALLED_APPS = [
     'campaign'
 
 ]
-
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -127,7 +123,9 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
     ],
     'DEFAULT_PARSER_CLASSES': [
-        'rest_framework.parsers.JSONParser'
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.MultiPartParser',
+        'rest_framework.parsers.FormParser',
     ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
@@ -192,7 +190,6 @@ MEDIA_ROOT = MEDIA_DIR
 # CSRF and CORS settings
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
-
 
 ]
 
