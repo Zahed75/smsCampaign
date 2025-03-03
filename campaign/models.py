@@ -8,7 +8,7 @@ class DailySalesReport(models.Model):
     item_code = models.CharField(max_length=50)
     receivable_value = models.DecimalField(max_digits=10, decimal_places=2)
     uploaded_at = models.DateTimeField(auto_now_add=True)
-
+    upload_file = models.FileField(upload_to='daily_sales_uploads/', null=True, blank=True)
     def is_eligible(self):
         return self.receivable_value >= 5000
 
@@ -51,3 +51,20 @@ class CustomerGiftSelection(models.Model):
 
     def __str__(self):
         return self.customer_name
+
+
+
+class DailySalesReportUpload(models.Model):
+    upload_file = models.FileField(upload_to='daily_sales_uploads/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Uploaded file: {self.upload_file.name}"
+
+
+class OutletManagerUpload(models.Model):
+    upload_file = models.FileField(upload_to='outlet_uploads/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Uploaded file: {self.upload_file.name}"
