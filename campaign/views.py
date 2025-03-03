@@ -23,7 +23,7 @@ class GenerateOTPView(APIView):
         customer_name = request.data.get('customer_name')
         mobile_no = request.data.get('mobile_no')
         product_code = request.data.get('product_code')
-        showroom_code = request.data.get('showroom_code')
+        invoice_no = request.data.get('invoice_no')
 
         # Check if the customer exists in DailySalesReport and is eligible
         sales_record = DailySalesReport.objects.filter(

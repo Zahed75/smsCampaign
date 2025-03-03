@@ -65,7 +65,7 @@ class OutletManagerAdmin(admin.ModelAdmin):
 
 @admin.register(DailySalesReport)
 class DailySalesReportAdmin(admin.ModelAdmin):
-    list_display = ('customer_name', 'invoice_no', 'item_code', 'receivable_value')
+    list_display = ('customer_name', 'invoice_no', 'item_code', 'receivable_value','mobile_no')
 
 admin.site.register(CustomerOTP)
 admin.site.register(GiftCard)
