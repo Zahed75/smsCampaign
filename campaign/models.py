@@ -12,6 +12,9 @@ class DailySalesReport(models.Model):
     def is_eligible(self):
         return self.receivable_value >= 5000
 
+    def __str__(self):
+        return self.customer_name
+
 
 class OutletManager(models.Model):
     showroom_code = models.CharField(max_length=50, unique=True)

@@ -110,19 +110,48 @@ class UploadDailySalesReportView(APIView):
 
 
 
+
+
+
+
+
+
+
+
 class UploadOutletInformationView(APIView):
+    parser_classes = (MultiPartParser, FormParser)  # Allow file upload parsing
+
     def post(self, request):
         file = request.FILES.get('file')
+
         if not file:
             return Response({"error": "No file uploaded"}, status=status.HTTP_400_BAD_REQUEST)
 
-        file_path = default_storage.save(file.name, file)
-        df = pd.read_excel(file_path)
+        if not file.name.endswith('.xlsx'):
+            return Response({"error": "Only .xlsx files are allowed"}, status=status.HTTP_400_BAD_REQUEST)
 
-        for _, row in df.iterrows():
-            OutletManager.objects.update_or_create(
-                showroom_code=row['Suffix (showroom code)'],
-                defaults={'bm_number': row['BM Number']}
-            )
+        try:
+            # Read Excel file
+            df = pd.read_excel(file, engine='openpyxl')
 
-        return Response({"message": "Outlet information uploaded successfully"}, status=status.HTTP_201_CREATED)
+            # Normalize column names (remove spaces and lowercase)
+            df.columns = df.columns.str.strip().str.lower()
+
+            # Required columns (matching your Excel file)
+            required_columns = {'suffix', 'bm number'}
+
+            if not required_columns.issubset(set(df.columns)):
+                return Response({"error": "Invalid file format. Required 'Suffix' and 'BM Number' columns."},
+                                status=status.HTTP_400_BAD_REQUEST)
+
+            # Save Outlet Information
+            for _, row in df.iterrows():
+                OutletManager.objects.update_or_create(
+                    showroom_code=row['suffix'],  # Match "Suffix" column
+                    defaults={'bm_number': row['bm number']}  # Match "BM Number" column
+                )
+
+            return Response({"message": "Outlet information uploaded successfully"}, status=status.HTTP_201_CREATED)
+
+        except Exception as e:
+            return Response({"error": f"Failed to process file: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
