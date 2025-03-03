@@ -13,6 +13,9 @@ MEDIA_DIR = os.path.join(BASE_DIR, 'media')
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-3rff+yu9p48v@#&4r9h#dty^r5za0shcqq_isxnr!f#*%m!-16'
 
+
+SMS_API_KEY = 'dbf5ae53b49fdf65ac01f09ef7385686ac42ea4d'
+
 # SECURITY WARNING: don't run with debug turned on in production!
 
 

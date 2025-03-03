@@ -1,18 +1,20 @@
-from django.shortcuts import render
-
 
 from .modules import *
-# Create your views here.
-
 
 
 def generate_otp(mobile_no):
-    """ Generate a 6-digit OTP and store it """
+    """ Generate a 6-digit OTP, store it, and send via SMS """
     otp = str(random.randint(100000, 999999))
+
+    # Store OTP in database
     CustomerOTP.objects.update_or_create(mobile_no=mobile_no, defaults={'otp': otp})
 
-    # Simulating OTP sending (Replace with SMS Gateway Integration)
-    print(f"OTP sent to {mobile_no}: {otp}")
+    # Send OTP via SMS
+    message = f"Your OTP code is {otp}. Do not share it with anyone."
+    response = send_sms(mobile_no, message)
+
+    if response.get("status") != "success":  # Adjust this based on the API response structure
+        print(f"Failed to send OTP: {response}")  # Debugging info
 
     return otp
 
@@ -39,6 +41,8 @@ class GenerateOTPView(APIView):
         # Generate OTP and send it
         generate_otp(mobile_no)
         return Response({"message": "OTP sent successfully"}, status=status.HTTP_200_OK)
+
+
 
 
 class VerifyOTPView(APIView):
