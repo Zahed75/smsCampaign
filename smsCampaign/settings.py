@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'corsheaders',
     'django.contrib.staticfiles',
-    'customerGift'
+    'campaign'
+
 ]
 
 
