@@ -39,3 +39,28 @@ class GiftSelectionView(APIView):
             serializer.save()
             return Response({"message": "Gift selected successfully"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+class UploadSalesReportView(APIView):
+    parser_classes = [MultiPartParser]
+
+    def post(self, request):
+        file = request.FILES.get('file')
+        if not file:
+            return Response({"error": "No file uploaded"}, status=status.HTTP_400_BAD_REQUEST)
+
+        file_path = default_storage.save(file.name, file)
+        df = pd.read_excel(file_path)
+
+        for _, row in df.iterrows():
+            if row['Receivable Value'] >= 5000:
+                DailySalesReport.objects.create(
+                    customer_name=row['Customer Name'],
+                    mobile_no=row['Mobile No'],
+                    invoice_no=row['Invoice No'],
+                    item_code=row['Item Code'],
+                    receivable_value=row['Receivable Value']
+                )
+        return Response({"message": "Sales report uploaded successfully"}, status=status.HTTP_201_CREATED)
