@@ -28,6 +28,12 @@ class OutletManager(models.Model):
     def __str__(self):
         return self.showroom_code
 
+    def save(self, *args, **kwargs):
+        # Ensure mobile number is always saved as 11-digit with leading zero
+        self.mobile_no = str(self.bm_number).zfill(11)
+        super().save(*args, **kwargs)
+
+
 class CustomerOTP(models.Model):
     mobile_no = models.CharField(max_length=15, unique=True)
     otp = models.CharField(max_length=6)
