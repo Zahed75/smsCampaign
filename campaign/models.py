@@ -12,6 +12,11 @@ class DailySalesReport(models.Model):
     def is_eligible(self):
         return self.receivable_value >= 5000
 
+    def save(self, *args, **kwargs):
+        # Ensure mobile number is always saved as 11-digit with leading zero
+        self.mobile_no = str(self.mobile_no).zfill(11)
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.customer_name
 
