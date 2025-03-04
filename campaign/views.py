@@ -78,41 +78,6 @@ class GiftSelectionView(APIView):
 
 
 
-# class UploadDailySalesReportView(APIView):
-#     parser_classes = (MultiPartParser, FormParser)  # ✅ Add parsers for file upload
-#
-#     def post(self, request):
-#         file = request.FILES.get('file')
-#
-#         if not file:
-#             return Response({"error": "No file uploaded"}, status=status.HTTP_400_BAD_REQUEST)
-#
-#         if not file.name.endswith('.xlsx'):
-#             return Response({"error": "Only .xlsx files are allowed"}, status=status.HTTP_400_BAD_REQUEST)
-#
-#         try:
-#             df = pd.read_excel(file, engine='openpyxl', dtype={'Mobile No': str})
-#             df['Mobile No'] = df['Mobile No'].astype(str).str.zfill(11)  # Ensure 11-digit format
-#
-#         except Exception as e:
-#             return Response({"error": f"Failed to process file: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
-#
-#         # ✅ Validate required columns
-#         required_columns = {'Customer Name', 'Mobile No', 'Invoice No', 'Item Code', 'Receivable Value'}
-#         if not required_columns.issubset(df.columns):
-#             return Response({"error": "Invalid file format. Required columns missing."}, status=status.HTTP_400_BAD_REQUEST)
-#
-#         # ✅ Process and save data
-#         for _, row in df.iterrows():
-#             DailySalesReport.objects.create(
-#                 customer_name=row['Customer Name'],
-#                 mobile_no=row['Mobile No'],
-#                 invoice_no=row['Invoice No'],
-#                 item_code=row['Item Code'],
-#                 receivable_value=row['Receivable Value']
-#             )
-#
-#         return Response({"message": "Daily Sales Report uploaded successfully"}, status=status.HTTP_201_CREATED)
 
 
 

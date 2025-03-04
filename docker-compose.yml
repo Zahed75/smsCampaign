@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - phpmyadmin
+
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3308:3306"  # Mapping external port 3308 to internal port 3306
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - "8888:80"  # Access phpMyAdmin on port 8888
+    environment:
+      PMA_HOST: db  # Service name of the MySQL container
+      PMA_PORT: 3306  # Internal port of the MySQL container
+    depends_on:
+      - db
+
+volumes:
+  mysql_data:
