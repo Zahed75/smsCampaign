@@ -19,6 +19,8 @@ def generate_otp(mobile_no):
     return otp
 
 
+
+
 class GenerateOTPView(APIView):
     """ Verify the customer purchase before sending OTP """
     def post(self, request):
@@ -63,23 +65,33 @@ class VerifyOTPView(APIView):
 
 
 class GiftSelectionView(APIView):
-    """ Show available gift cards with hidden names and allow customer selection """
+    """ Show available gift cards and allow a one-time customer selection """
+
     def get(self, request):
         gift_cards = GiftCard.objects.filter(is_active=True).values('product_code')
         return Response(gift_cards, status=status.HTTP_200_OK)
 
     def post(self, request):
+        mobile_no = request.data.get('mobile_no')
+        product_code = request.data.get('product_code')
+
+        # Check if the customer has already selected a gift
+        if CustomerGiftSelection.objects.filter(mobile_no=mobile_no).exists():
+            return Response({"error": "Gift already selected. You cannot select again."},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        # Ensure product_code is stored properly
+        try:
+            gift_card = GiftCard.objects.get(product_code=product_code)
+        except GiftCard.DoesNotExist:
+            return Response({"error": "Invalid product code."}, status=status.HTTP_400_BAD_REQUEST)
+
         serializer = CustomerGiftSelectionSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(gift_card=gift_card)  # Store gift_card correctly
             return Response({"message": "Gift selected successfully"}, status=status.HTTP_201_CREATED)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
-
-
 
 
 class UploadDailySalesReportView(APIView):
