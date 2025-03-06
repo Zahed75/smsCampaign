@@ -1,16 +1,13 @@
 from django.urls import path
 from .views import *
 
-
-from .views import (
-    GenerateOTPView, VerifyOTPView, GiftSelectionView,
-    UploadDailySalesReportView, UploadOutletInformationView
-)
-
 urlpatterns = [
-    path('api/generate-otp/', GenerateOTPView.as_view(), name='generate-otp'),
-    path('api/verify-otp/', VerifyOTPView.as_view(), name='verify-otp'),
-    path('api/gifts/', GiftSelectionView.as_view(), name='gift-selection'),
-    path('api/upload-sales-report/', UploadDailySalesReportView.as_view(), name='upload-sales-report'),
-    path('api/upload-outlet-info/', UploadOutletInformationView.as_view(), name='upload-outlet-info'),
+
+
+    path('api/upload-daily-sales/', UploadDailySalesReportView.as_view(), name='upload_daily_sales'),
+    path('api/upload-outlet-info/', UploadOutletInformationView.as_view(), name='upload_outlet_info'),
+    path('api/customer-list-create/', customer_list_create, name='customer_list_create'),
+    path('api/verifyOtp/',verify_otp),
+    path('api/discount-gift-list/', discount_gift_list_create, name='discount_gift_list'),
+    path('api/redeem-discount/', redeem_discount, name='redeem_discount'),
 ]

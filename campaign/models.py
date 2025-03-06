@@ -9,6 +9,7 @@ class DailySalesReport(models.Model):
     receivable_value = models.DecimalField(max_digits=10, decimal_places=2)
     uploaded_at = models.DateTimeField(auto_now_add=True)
     upload_file = models.FileField(upload_to='daily_sales_uploads/', null=True, blank=True)
+
     def is_eligible(self):
         return self.receivable_value >= 5000
 
@@ -34,6 +35,8 @@ class OutletManager(models.Model):
         super().save(*args, **kwargs)
 
 
+
+
 class CustomerOTP(models.Model):
     mobile_no = models.CharField(max_length=15, unique=True)
     otp = models.CharField(max_length=6)
@@ -43,25 +46,7 @@ class CustomerOTP(models.Model):
         return self.mobile_no
 
 
-class GiftCard(models.Model):
-    product_code = models.CharField(max_length=50)
-    gift_name = models.CharField(max_length=255)
-    is_active = models.BooleanField(default=True)
 
-    def __str__(self):
-        return self.gift_name
-
-
-class CustomerGiftSelection(models.Model):
-    customer_name = models.CharField(max_length=255)
-    mobile_no = models.CharField(max_length=15)
-    product_code = models.CharField(max_length=50)
-    showroom_code = models.CharField(max_length=50)
-    gift_card = models.ForeignKey(GiftCard, on_delete=models.SET_NULL, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.customer_name
 
 
 
@@ -79,3 +64,28 @@ class OutletManagerUpload(models.Model):
 
     def __str__(self):
         return f"Uploaded file: {self.upload_file.name}"
+
+
+class Customer(models.Model):
+    customer_name = models.CharField(max_length=255)
+    mobile_no = models.CharField(max_length=15, unique=True)
+
+    def __str__(self):
+        return f"{self.customer_name} ({self.mobile_no})"
+
+
+class DiscountGift(models.Model):
+    discount_code = models.CharField(max_length=50, unique=True)
+    discount_text = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.discount_code}: {self.discount_text}"
+
+
+class DiscountRedemption(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    discount = models.ForeignKey(DiscountGift, on_delete=models.CASCADE)
+    redeemed_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.customer.customer_name} redeemed {self.discount.discount_code}"

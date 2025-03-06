@@ -16,13 +16,29 @@ class CustomerOTPSerializer(serializers.ModelSerializer):
         model = CustomerOTP
         fields = '__all__'
 
-class GiftCardSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = GiftCard
-        fields = ['product_code']
 
-class CustomerGiftSelectionSerializer(serializers.ModelSerializer):
+
+
+
+
+
+class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CustomerGiftSelection
+        model = Customer
+        fields = ['customer_name', 'mobile_no']
+        extra_kwargs = {
+            'customer_name': {'required': False},  # Make customer_name optional
+        }
+
+class DiscountGiftSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DiscountGift
         fields = '__all__'
 
+class DiscountRedemptionSerializer(serializers.ModelSerializer):
+    customer = CustomerSerializer()
+    discount = DiscountGiftSerializer()
+
+    class Meta:
+        model = DiscountRedemption
+        fields = '__all__'

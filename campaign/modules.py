@@ -13,5 +13,9 @@ from django.core.files.uploadedfile import InMemoryUploadedFile, TemporaryUpload
 from rest_framework.parsers import FormParser
 import random
 from Utility.smsHandlers import send_sms
-
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
+from django.utils.timezone import now
+from django.utils import timezone
+from datetime import timedelta
